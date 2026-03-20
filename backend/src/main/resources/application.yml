@@ -1,0 +1,29 @@
+spring:
+  application:
+    name: gov-qa-backend
+  datasource:
+    url: jdbc:mysql://localhost:3306/gov_qa?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai
+    username: root
+    password: 12345678
+  jpa:
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        format_sql: true
+    open-in-view: false
+
+server:
+  port: 8080
+
+app:
+  auth:
+    token-ttl-minutes: 720
+  nlp:
+    base-url: http://localhost:8000
+    timeout-ms: 5000
+
+logging:
+  level:
+    root: INFO
+    com.govqa: INFO
