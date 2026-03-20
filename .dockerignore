@@ -1,0 +1,10 @@
+.git
+.gitignore
+.DS_Store
+docs
+scripts
+**/node_modules
+**/dist
+**/target
+**/.idea
+**/.vscode

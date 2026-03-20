@@ -2,9 +2,9 @@ spring:
   application:
     name: gov-qa-backend
   datasource:
-    url: jdbc:mysql://localhost:3306/gov_qa?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai
-    username: root
-    password: 12345678
+    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://localhost:3306/gov_qa?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai}
+    username: ${SPRING_DATASOURCE_USERNAME:root}
+    password: ${SPRING_DATASOURCE_PASSWORD:12345678}
   jpa:
     hibernate:
       ddl-auto: none
@@ -14,14 +14,14 @@ spring:
     open-in-view: false
 
 server:
-  port: 8080
+  port: ${SERVER_PORT:8080}
 
 app:
   auth:
-    token-ttl-minutes: 720
+    token-ttl-minutes: ${APP_AUTH_TOKEN_TTL_MINUTES:720}
   nlp:
-    base-url: http://localhost:8000
-    timeout-ms: 5000
+    base-url: ${APP_NLP_BASE_URL:http://localhost:8000}
+    timeout-ms: ${APP_NLP_TIMEOUT_MS:5000}
 
 logging:
   level:
