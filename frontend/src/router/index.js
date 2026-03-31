@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import UnifiedLayout from '../layouts/UnifiedLayout.vue'
 import PublicHome from '../pages/public/PublicHome.vue'
 import PublicCategory from '../pages/public/PublicCategory.vue'
 import PublicResult from '../pages/public/PublicResult.vue'
@@ -14,22 +15,29 @@ import AdminSettings from '../pages/admin/AdminSettings.vue'
 import AdminImport from '../pages/admin/AdminImport.vue'
 
 const routes = [
-  { path: '/', component: PublicHome },
-  { path: '/category/:id', component: PublicCategory },
-  { path: '/result', component: PublicResult },
-  { path: '/admin/login', component: AdminLogin },
   {
-    path: '/admin',
-    component: AdminLayout,
+    path: '/',
+    component: UnifiedLayout,
     children: [
-      { path: 'dashboard', component: AdminDashboard },
-      { path: 'categories', component: AdminCategory },
-      { path: 'faq', component: AdminFaq },
-      { path: 'announcements', component: AdminAnnouncement },
-      { path: 'logs', component: AdminLogs },
-      { path: 'unmatched', component: AdminUnmatched },
-      { path: 'settings', component: AdminSettings },
-      { path: 'import', component: AdminImport }
+      { path: '', component: PublicHome },
+      { path: 'category/:id', component: PublicCategory },
+      { path: 'result', component: PublicResult },
+      { path: 'admin/login', component: AdminLogin },
+      {
+        path: 'admin',
+        component: AdminLayout,
+        children: [
+          { path: '', redirect: '/admin/dashboard' },
+          { path: 'dashboard', component: AdminDashboard },
+          { path: 'categories', component: AdminCategory },
+          { path: 'faq', component: AdminFaq },
+          { path: 'announcements', component: AdminAnnouncement },
+          { path: 'logs', component: AdminLogs },
+          { path: 'unmatched', component: AdminUnmatched },
+          { path: 'settings', component: AdminSettings },
+          { path: 'import', component: AdminImport }
+        ]
+      }
     ]
   }
 ]

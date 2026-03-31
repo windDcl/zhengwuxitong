@@ -69,8 +69,17 @@ CREATE TABLE IF NOT EXISTS unmatched_question (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
   user_question VARCHAR(500) NOT NULL,
   similarity DECIMAL(5,4) NULL,
+  status TINYINT NOT NULL DEFAULT 0 COMMENT '0待处理 1AI已建议 2已转FAQ 3已忽略',
+  ai_suggested_question VARCHAR(500) NULL,
+  ai_suggested_answer TEXT NULL,
+  ai_suggested_aliases TEXT NULL,
+  ai_suggested_category VARCHAR(100) NULL,
+  resolved_faq_id BIGINT NULL,
+  resolved_at DATETIME NULL,
   created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  INDEX idx_unmatched_created_at (created_at)
+  INDEX idx_unmatched_created_at (created_at),
+  INDEX idx_unmatched_status_created (status, created_at),
+  CONSTRAINT fk_unmatched_resolved_faq FOREIGN KEY (resolved_faq_id) REFERENCES faq(id)
 );
 
 CREATE TABLE IF NOT EXISTS system_setting (
@@ -99,4 +108,13 @@ ON DUPLICATE KEY UPDATE updated_at = CURRENT_TIMESTAMP;
 
 INSERT INTO system_setting(setting_key, setting_value)
 VALUES ('semantic.threshold', '0.30')
+ON DUPLICATE KEY UPDATE setting_value = VALUES(setting_value);
+
+INSERT INTO system_setting(setting_key, setting_value)
+VALUES
+('ai.enabled', 'false'),
+('ai.base-url', ''),
+('ai.api-key', ''),
+('ai.model', ''),
+('ai.system-prompt', '你是一个谨慎、可靠的政务知识助手。')
 ON DUPLICATE KEY UPDATE setting_value = VALUES(setting_value);

@@ -14,6 +14,7 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -23,6 +24,7 @@ public class AskService {
     private final QaLogRepository qaLogRepository;
     private final UnmatchedQuestionRepository unmatchedQuestionRepository;
     private final SettingService settingService;
+    private final AiAssistService aiAssistService;
 
     public Map<String, Object> ask(String question, int topN) {
         List<NlpClient.MatchItem> matches = nlpClient.match(question, topN);
@@ -41,7 +43,11 @@ public class AskService {
             result.put("similarity", top.getScore());
             writeLog(question, top.getMatchedQuestion(), topFaq.getId(), top.getScore(), 1);
         } else {
-            result.put("message", "未找到相关问题，建议咨询政务服务大厅或拨打12345热线");
+            Optional<String> aiAnswer = aiAssistService.answerPublicQuestion(question);
+            result.put("message", aiAnswer.isPresent()
+                    ? "知识库未命中，以下为第三方 AI 生成的参考答复，请以官方最新信息为准。"
+                    : "未找到相关问题，建议咨询政务服务大厅或拨打12345热线");
+            aiAnswer.ifPresent(answer -> result.put("aiAnswer", answer));
             writeLog(question, top == null ? null : top.getMatchedQuestion(),
                     topFaq == null ? null : topFaq.getId(), top == null ? null : top.getScore(), 0);
             writeUnmatched(question, top == null ? null : top.getScore());
@@ -63,6 +69,7 @@ public class AskService {
         UnmatchedQuestion q = new UnmatchedQuestion();
         q.setUserQuestion(question);
         q.setSimilarity(similarity == null ? null : BigDecimal.valueOf(similarity));
+        q.setStatus(0);
         unmatchedQuestionRepository.save(q);
     }
 }

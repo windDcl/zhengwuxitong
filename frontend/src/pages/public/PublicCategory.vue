@@ -1,18 +1,27 @@
 <template>
-  <div class="page">
-    <h1>分类服务</h1>
-    <el-input v-model="keyword" placeholder="分类内搜索" @keyup.enter="loadFaqs" style="margin-bottom:12px" />
-    <el-button type="primary" @click="loadFaqs">搜索</el-button>
+  <div class="page category-page">
+    <section class="panel category-hero">
+      <div>
+        <span class="hero-eyebrow">分类服务</span>
+        <h1>在同一主题下，快速找到稳定答案</h1>
+        <p>适合办理流程、材料清单、咨询入口这类高频问题。</p>
+      </div>
+      <div class="category-search">
+        <el-input v-model="keyword" placeholder="分类内搜索，例如：提取、转移、参保" @keyup.enter="loadFaqs" />
+        <el-button type="primary" @click="loadFaqs">搜索</el-button>
+      </div>
+    </section>
 
-    <el-card v-for="faq in faqs" :key="faq.id" style="margin-top:12px">
-      <div style="display:flex;justify-content:space-between;align-items:center;gap:12px">
+    <section class="faq-list">
+      <article v-for="faq in faqs" :key="faq.id" class="panel faq-card">
         <div>
           <strong>{{ faq.standardQuestion }}</strong>
-          <div style="color:#64748b; margin-top:6px">{{ faq.standardAnswer }}</div>
+          <p>{{ faq.standardAnswer }}</p>
         </div>
         <el-button @click="viewAnswer(faq.standardQuestion)">查看答案</el-button>
-      </div>
-    </el-card>
+      </article>
+      <div v-if="!faqs.length" class="panel empty-tip">当前分类下暂无匹配问答</div>
+    </section>
   </div>
 </template>
 
@@ -40,3 +49,69 @@ const viewAnswer = (question) => {
 
 onMounted(loadFaqs)
 </script>
+
+<style scoped>
+.category-page {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.category-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 420px;
+  gap: 20px;
+  align-items: end;
+}
+
+.category-hero h1 {
+  margin: 12px 0 10px;
+  font-size: 40px;
+}
+
+.category-hero p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.category-search {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 108px;
+  gap: 10px;
+}
+
+.faq-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.faq-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 120px;
+  gap: 16px;
+  align-items: center;
+}
+
+.faq-card strong {
+  font-size: 22px;
+}
+
+.faq-card p {
+  margin: 10px 0 0;
+  color: var(--muted);
+  line-height: 1.8;
+}
+
+@media (max-width: 768px) {
+  .category-hero,
+  .category-search,
+  .faq-card {
+    grid-template-columns: 1fr;
+  }
+
+  .category-hero h1 {
+    font-size: 30px;
+  }
+}
+</style>

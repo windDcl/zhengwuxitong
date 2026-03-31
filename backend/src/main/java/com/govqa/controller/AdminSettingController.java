@@ -1,6 +1,7 @@
 package com.govqa.controller;
 
 import com.govqa.common.ApiResponse;
+import com.govqa.dto.SettingUpdateRequest;
 import com.govqa.service.SettingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -21,5 +22,10 @@ public class AdminSettingController {
     @PutMapping("/threshold")
     public ApiResponse<Map<String, String>> updateThreshold(@RequestParam("value") String value) {
         return ApiResponse.ok(settingService.updateThreshold(value));
+    }
+
+    @PutMapping
+    public ApiResponse<Map<String, String>> updateSettings(@RequestBody SettingUpdateRequest request) {
+        return ApiResponse.ok(settingService.updateSettings(request.getSettings()));
     }
 }
